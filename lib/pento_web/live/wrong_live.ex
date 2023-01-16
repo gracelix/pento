@@ -46,7 +46,7 @@ defmodule PentoWeb.WrongLive do
 
   def handle_event("guess", %{"number" => guess}, socket) do
     {msg, score, is_correct} = socket |> check_answer(guess)
-
+    # IO.inspect(socket)
     {
       :noreply,
       socket
@@ -58,9 +58,9 @@ defmodule PentoWeb.WrongLive do
     }
   end
 
-  defp check_answer(%{assigns: %{answer: answer}} = socket, guess) do
+  defp check_answer(%{assigns: %{answer: answer, current_user: current_user}} = socket, guess) do
     case answer do
-      ^guess -> {"Correct answer: #{guess}. Congratulations!", socket.assigns.score + 1, true}
+      ^guess -> {"Correct answer: #{guess}. Congratulations, #{current_user.username}!", socket.assigns.score + 1, true}
       ^answer -> {"Your answer: #{guess}. Wrong! Try again.", socket.assigns.score - 1, false}
     end
   end
