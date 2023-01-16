@@ -101,4 +101,12 @@ defmodule Pento.Catalog do
   def change_product(%Product{} = product, attrs \\ %{}) do
     Product.changeset(product, attrs)
   end
+
+  @doc """
+  ## Example
+      Pento.Catalog.markdown_product(Pento.Catalog.get_product!(1), %{unit_price: 6})
+  """
+  def markdown_product(%Product{} = product, attrs \\ %{}) do
+    Product.unit_price_changeset(product, attrs)
+  end
 end
