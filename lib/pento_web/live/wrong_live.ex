@@ -1,6 +1,8 @@
 defmodule PentoWeb.WrongLive do
   use Phoenix.LiveView, layout: {PentoWeb.LayoutView, "live.html"}
 
+  alias PentoWeb.Router.Helpers, as: Routes
+
   def mount(_params, session, socket) do
     {:ok,
      assign(socket,
@@ -17,10 +19,6 @@ defmodule PentoWeb.WrongLive do
       <h1>Your score: <%= @score %></h1>
       <h2>
         <%= @message %>
-        <%!-- <%= if @is_correct do%>
-          <%= live_redirect "Play again!", to: Routes.live_path(@socket, PentoWeb.WrongLive) %>
-        <% end %> --%>
-
       </h2>
       <h2>
         <%= for n <- 1..10 do %>
@@ -30,6 +28,11 @@ defmodule PentoWeb.WrongLive do
           <%= @current_user.email %>
           <%= @session_id %>
         </pre> --%>
+    </h2>
+    <h2>
+      <%= if @is_correct do%>
+        <%= live_redirect "Play again!", to: Routes.live_path(@socket, PentoWeb.WrongLive) %>
+      <% end %>
     </h2>
     """
   end
