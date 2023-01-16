@@ -5,30 +5,30 @@ defmodule PentoWeb.Router do
 
   pipeline :browser do
     # accept only html requests
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {PentoWeb.LayoutView, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {PentoWeb.LayoutView, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
     #  if user is logged in, fetch_current_user/2 function plug will
-    plug :fetch_current_user
+    plug(:fetch_current_user)
 
     # add a key in assigns called current_user. Now, whenever a user logs in, any code that handles
     # routes tied to the browser pipeline will have access to the current_user in conn.assigns.current_user
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   # "/" -> applies to all routes that start with /
   scope "/", PentoWeb do
     # every matching req in this block will go through all the plugs in the :browser pipeline
-    pipe_through :browser
+    pipe_through(:browser)
 
     # every route starts with 1) route type, 2) URL pattern, 3) module, 4) options
-    get "/", PageController, :index
+    get("/", PageController, :index)
     # live "/guess", WrongLive
   end
 
@@ -48,9 +48,9 @@ defmodule PentoWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: PentoWeb.Telemetry
+      live_dashboard("/dashboard", metrics: PentoWeb.Telemetry)
     end
   end
 
@@ -60,48 +60,56 @@ defmodule PentoWeb.Router do
   # node running the Phoenix server.
   if Mix.env() == :dev do
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 
   ## Authentication routes
 
   scope "/", PentoWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    pipe_through([:browser, :redirect_if_user_is_authenticated])
 
-    get "/users/register", UserRegistrationController, :new
-    post "/users/register", UserRegistrationController, :create
-    get "/users/log_in", UserSessionController, :new
-    post "/users/log_in", UserSessionController, :create
-    get "/users/reset_password", UserResetPasswordController, :new
-    post "/users/reset_password", UserResetPasswordController, :create
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
-    put "/users/reset_password/:token", UserResetPasswordController, :update
+    get("/users/register", UserRegistrationController, :new)
+    post("/users/register", UserRegistrationController, :create)
+    get("/users/log_in", UserSessionController, :new)
+    post("/users/log_in", UserSessionController, :create)
+    get("/users/reset_password", UserResetPasswordController, :new)
+    post("/users/reset_password", UserResetPasswordController, :create)
+    get("/users/reset_password/:token", UserResetPasswordController, :edit)
+    put("/users/reset_password/:token", UserResetPasswordController, :update)
   end
 
   scope "/", PentoWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    # only logged-in users allowed here
+    # no need to force page reload for redirection within this block
+    pipe_through([:browser, :require_authenticated_user])
 
-    # restricts route to logged in users
     live_session :default, on_mount: PentoWeb.UserAuthLive do
       #  use the browser pipeline and call the require_authenticated_user plug
-      live "/guess", WrongLive
+      live("/guess", WrongLive)
     end
 
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    live("/products", ProductLive.Index, :index)
+    live("/products/new", ProductLive.Index, :new)
+    live("/products/:id/edit", ProductLive.Index, :edit)
+
+    live("/products/:id", ProductLive.Show, :show)
+    live("/products/:id/show/edit", ProductLive.Show, :edit)
+
+    get("/users/settings", UserSettingsController, :edit)
+    put("/users/settings", UserSettingsController, :update)
+    get("/users/settings/confirm_email/:token", UserSettingsController, :confirm_email)
   end
 
   scope "/", PentoWeb do
-    pipe_through [:browser]
+    pipe_through([:browser])
 
-    delete "/users/log_out", UserSessionController, :delete
-    get "/users/confirm", UserConfirmationController, :new
-    post "/users/confirm", UserConfirmationController, :create
-    get "/users/confirm/:token", UserConfirmationController, :edit
-    post "/users/confirm/:token", UserConfirmationController, :update
+    delete("/users/log_out", UserSessionController, :delete)
+    get("/users/confirm", UserConfirmationController, :new)
+    post("/users/confirm", UserConfirmationController, :create)
+    get("/users/confirm/:token", UserConfirmationController, :edit)
+    post("/users/confirm/:token", UserConfirmationController, :update)
   end
 end
