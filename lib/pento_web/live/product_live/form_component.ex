@@ -34,7 +34,8 @@ defmodule PentoWeb.ProductLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Product updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)} #  trigger mount/3 to reload product list from db
+         #  trigger mount/3 to reload product list from db
+         |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
