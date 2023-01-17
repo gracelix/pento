@@ -5,6 +5,7 @@ defmodule PentoWeb.ProductLive.FormComponent do
 
   @impl true
   def update(%{product: product} = assigns, socket) do
+    # used to keep the component up-to-date whenever the parent live view or the component itself changes
     changeset = Catalog.change_product(product)
 
     {:ok,
@@ -33,7 +34,7 @@ defmodule PentoWeb.ProductLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Product updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_redirect(to: socket.assigns.return_to)} #  trigger mount/3 to reload product list from db
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
