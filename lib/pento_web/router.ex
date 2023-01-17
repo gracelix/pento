@@ -11,25 +11,15 @@ defmodule PentoWeb.Router do
     plug(:put_root_layout, {PentoWeb.LayoutView, :root})
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
-    #  if user is logged in, fetch_current_user/2 function plug will
-    plug(:fetch_current_user)
 
-    # add a key in assigns called current_user. Now, whenever a user logs in, any code that handles
-    # routes tied to the browser pipeline will have access to the current_user in conn.assigns.current_user
+    #  if user is logged in, fetch_current_user/2 function plug will add a key in assigns called current_user.
+    plug(:fetch_current_user)
+    # Now, whenever a user logs in, any code that handles routes tied to the browser pipeline
+    # will have access to the current_user in conn.assigns.current_user
   end
 
   pipeline :api do
     plug(:accepts, ["json"])
-  end
-
-  # "/" -> applies to all routes that start with /
-  scope "/", PentoWeb do
-    # every matching req in this block will go through all the plugs in the :browser pipeline
-    pipe_through(:browser)
-
-    # every route starts with 1) route type, 2) URL pattern, 3) module, 4) options
-    get("/", PageController, :index)
-    # live "/guess", WrongLive
   end
 
   # Other scopes may use custom stacks.
@@ -70,7 +60,9 @@ defmodule PentoWeb.Router do
 
   scope "/", PentoWeb do
     pipe_through([:browser, :redirect_if_user_is_authenticated])
+    get("/", PageController, :index)
 
+    # if user not logged in, can go here
     get("/users/register", UserRegistrationController, :new)
     post("/users/register", UserRegistrationController, :create)
     get("/users/log_in", UserSessionController, :new)
@@ -89,22 +81,27 @@ defmodule PentoWeb.Router do
     live_session :default, on_mount: PentoWeb.UserAuthLive do
       #  use the browser pipeline and call the require_authenticated_user plug
       live("/guess", WrongLive)
+      live("/products", ProductLive.Index, :index)
+      live("/products/new", ProductLive.Index, :new)
+      live("/products/:id/edit", ProductLive.Index, :edit)
+
+      live("/products/:id", ProductLive.Show, :show)
+      live("/products/:id/show/edit", ProductLive.Show, :edit)
+
+      get("/users/settings", UserSettingsController, :edit)
+      put("/users/settings", UserSettingsController, :update)
+      get("/users/settings/confirm_email/:token", UserSettingsController, :confirm_email)
     end
-
-    live("/products", ProductLive.Index, :index)
-    live("/products/new", ProductLive.Index, :new)
-    live("/products/:id/edit", ProductLive.Index, :edit)
-
-    live("/products/:id", ProductLive.Show, :show)
-    live("/products/:id/show/edit", ProductLive.Show, :edit)
-
-    get("/users/settings", UserSettingsController, :edit)
-    put("/users/settings", UserSettingsController, :update)
-    get("/users/settings/confirm_email/:token", UserSettingsController, :confirm_email)
   end
 
+  # "/" -> applies to all routes that start with /
   scope "/", PentoWeb do
-    pipe_through([:browser])
+    # every matching req in this block will go through all the plugs in the :browser pipeline
+    pipe_through(:browser)
+
+    # every route starts with 1) route type, 2) URL pattern, 3) module, 4) options
+    # get("/", PageController, :index)
+    # live "/guess", WrongLive
 
     delete("/users/log_out", UserSessionController, :delete)
     get("/users/confirm", UserConfirmationController, :new)
