@@ -71,7 +71,7 @@ defmodule Pento.Accounts.User do
     end
   end
 
-    defp validate_username(changeset) do
+  defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
     |> unsafe_validate_unique(:username, Pento.Repo)
