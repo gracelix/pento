@@ -28,4 +28,21 @@ defmodule PentoWeb.PromoLive do
 
     {:noreply, socket |> assign(:changeset, changeset)}
   end
+
+  def handle_event(
+        "save",
+        %{"recipient" => recipient_params},
+        %{assigns: %{changeset: changeset}} = socket
+      ) do
+    # :timer.sleep(1000)
+    if changeset.valid? do
+      Promo.send_promo(recipient_params, %{})
+
+      {:noreply,
+       socket |> assign_recipient() |> assign_changeset() |> put_flash(:info, "Promo code sent")}
+    else
+      {:noreply,
+       socket |> assign(changeset: changeset) |> put_flash(:error, "Could not send promo code.")}
+    end
+  end
 end
