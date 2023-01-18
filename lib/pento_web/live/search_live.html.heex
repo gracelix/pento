@@ -1,0 +1,33 @@
+<h2>Search Product</h2>
+<div>
+  <.form let={f} for={@changeset} id="search-form" phx-change="validate" phx-submit="save">
+    <%= label f, :sku %>
+    <%= text_input f, :sku %>
+    <%= error_tag f, :sku %>
+    <%= submit "Search", phx_disable_with: "Searching..." %>
+  </.form>
+</div>
+<div>
+  <%= if @products do %>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Unit price</th>
+          <th>Sku</th>
+        </tr>
+      </thead>
+      <tbody id="products">
+        <%= for product <- @products do %>
+          <tr id={"product-#{product.id}"}>
+            <td><%= product.name %></td>
+            <td><%= product.description %></td>
+            <td><%= product.unit_price %></td>
+            <td><%= product.sku %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

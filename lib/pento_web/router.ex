@@ -82,6 +82,7 @@ defmodule PentoWeb.Router do
       #  use the browser pipeline and call the require_authenticated_user plug
       live("/guess", WrongLive)
       live "/promo", PromoLive
+      live("/search", SearchLive)
 
       live("/products", ProductLive.Index, :index)
       live("/products/new", ProductLive.Index, :new)
