@@ -2,6 +2,7 @@ defmodule Pento.Catalog.Product do
   # the use macro injects code from the Ecto.Schema into the current module
   use Ecto.Schema
   import Ecto.Changeset
+  alias Pento.Survey.Rating
 
   # schema function is from Ecto.Schema module
   schema "products" do
@@ -12,6 +13,7 @@ defmodule Pento.Catalog.Product do
     field(:image_upload, :string)
 
     timestamps()
+    has_many :ratings, Rating
   end
 
   @doc false

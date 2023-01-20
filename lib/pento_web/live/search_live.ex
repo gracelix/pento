@@ -46,17 +46,17 @@ defmodule PentoWeb.SearchLive do
       products = Search.get_product_by_sku(search_term_params["sku"])
       IO.inspect(products, label: "products")
 
-
       # GET A LIST OF PRODUCTS
       case products do
         [] -> {:noreply, socket |> put_flash(:error, "Cannot find products")}
+        # pattern matching a list of structs
         [%Product{} | _rest] = products -> {:noreply, socket |> assign(:products, products)}
       end
     else
       {:noreply,
-      socket
-      |> assign(changeset: socket.assigns.changeset)
-      |> put_flash(:error, "Please enter a valid SKU")}
+       socket
+       |> assign(changeset: socket.assigns.changeset)
+       |> put_flash(:error, "Please enter a valid SKU")}
     end
   end
 end
