@@ -1,7 +1,7 @@
 defmodule PentoWeb.SurveyLive do
   use PentoWeb, :live_view
   #  allows us to call the function component from the survey_live HEEx template
-  # alias __MODULE__.Component
+  alias __MODULE__.Component
   alias PentoWeb.DemographicLive
   alias Pento.Survey
 

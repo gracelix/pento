@@ -1,4 +1,4 @@
-# functional compoenent
+# functional (stateless) compoenent
 defmodule PentoWeb.SurveyLive.Component do
   # Phoenix.Component behaviour gives us access to the ~H sigil for rendering HEEx templates
   use Phoenix.Component
