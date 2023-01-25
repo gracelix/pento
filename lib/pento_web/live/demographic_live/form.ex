@@ -17,7 +17,6 @@ defmodule PentoWeb.DemographicLive.Form do
   # reducer to save the event
   defp save_demographic(socket, demographic_params) do
     case Survey.create_demographic(demographic_params) do
-      # coming soon!
       {:ok, demographic} ->
         # send a message to the parent live component (SurveyLive)
         send(self(), {:created_demographic, demographic})

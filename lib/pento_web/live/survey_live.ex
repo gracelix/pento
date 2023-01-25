@@ -7,9 +7,10 @@ defmodule PentoWeb.SurveyLive do
   alias PentoWeb.DemographicLive.Form
   alias PentoWeb.RatingLive
   alias Pento.Catalog
+  alias Phoenix.LiveView.JS
 
   def mount(_params, _session, socket) do
-    {:ok, socket |> assign_demographics() |> assign_products()}
+    {:ok, socket |> assign_demographics() |> assign_products() |> assign_toggle_text()}
   end
 
   def handle_info({:created_demographic, demographic}, socket) do
@@ -37,12 +38,21 @@ defmodule PentoWeb.SurveyLive do
     |> assign(:products, List.replace_at(products, product_index, updated_product))
   end
 
+  def handle_event("toggle-button", _, %{assigns: %{toggle: toggle}} = socket) do
+    toggle = not toggle
+    {:noreply, assign(socket, :toggle, toggle)}
+  end
+
   def assign_demographics(%{assigns: %{current_user: current_user}} = socket) do
     assign(socket, :demographic, Survey.get_demographic_by_user(current_user))
   end
 
   def assign_products(%{assigns: %{current_user: current_user}} = socket) do
     assign(socket, :products, list_products(current_user))
+  end
+
+  def assign_toggle_text(socket) do
+    assign(socket, :toggle, true)
   end
 
   defp list_products(user) do

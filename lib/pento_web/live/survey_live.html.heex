@@ -2,14 +2,23 @@
   <h1>Survey</h1>
 </section>
 
-<%= if @demographic do %>
-    <DemographicLive.Show.details demographic={@demographic} />
+<button phx-click={JS.toggle(to: "#survey-form") |> JS.push("toggle-button")}>
+  <%= if @toggle do %>
+    + expand
+  <% else %>
+    - contract
+  <% end %>
+</button>
 
-    <RatingLive.Index.products products={@products} current_user={@current_user} demographic={@demographic} />
-<% else %>
-    <.live_component module={Form} id="demographic-form" current_user={@current_user}/>
-<% end %>
+<div id="survey-form">
+  <%= if @demographic do %>
+      <DemographicLive.Show.details demographic={@demographic} />
 
+      <RatingLive.Index.products products={@products} current_user={@current_user} demographic={@demographic} />
+  <% else %>
+      <.live_component module={Form} id="demographic-form" current_user={@current_user}/>
+  <% end %>
+</div>
   <%!-- <Component.hero content="Hello from a Function Component"> 
     <div>Hello from a Function Component's Slot</div>
   </Component.hero> --%>
