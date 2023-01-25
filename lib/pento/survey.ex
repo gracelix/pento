@@ -52,6 +52,7 @@ defmodule Pento.Survey do
   def create_demographic(attrs \\ %{}) do
     %Demographic{}
     |> Demographic.changeset(attrs)
+    |> IO.inspect()
     |> Repo.insert()
   end
 
