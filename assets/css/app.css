@@ -123,3 +123,8 @@
 #survey-form {
   display: none;
 }
+
+.filters {
+  display: flex;
+  gap: 50px;
+}

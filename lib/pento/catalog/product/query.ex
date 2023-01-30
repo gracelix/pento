@@ -46,6 +46,34 @@ defmodule Pento.Catalog.Product.Query do
     query |> join(:left, [p, r, u, d], d in Demographic, on: d.user_id == u.id)
   end
 
+  #######################
+
+  def filter_by_gender(query \\ base(), filter) do
+    query |> apply_gender_filter(filter)
+  end
+
+  defp apply_gender_filter(query, "male") do
+    query |> where([p, r, u, d], d.gender == "male")
+  end
+
+  defp apply_gender_filter(query, "female") do
+    query |> where([p, r, u, d], d.gender == "female")
+  end
+
+  defp apply_gender_filter(query, "other") do
+    query |> where([p, r, u, d], d.gender == "other")
+  end
+
+  defp apply_gender_filter(query, "prefer not to say") do
+    query |> where([p, r, u, d], d.gender == "prefer not to say")
+  end
+
+  defp apply_gender_filter(query, _filter) do
+    query
+  end
+
+  #######################
+
   def filter_by_age_group(query \\ base(), filter) do
     query |> apply_age_group_filter(filter)
   end
