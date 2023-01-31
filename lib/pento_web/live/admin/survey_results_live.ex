@@ -36,6 +36,13 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
     end
   end
 
+  ############ FILTERS ##############
+
+  # set age_group_filter to value in socket if exists
+  def assign_age_group_filter(%{assigns: %{age_group_filter: age_group_filter}} = socket) do
+    assign(socket, :age_group_filter, age_group_filter)
+  end
+
   def assign_age_group_filter(socket) do
     socket |> assign(:age_group_filter, "all")
   end
@@ -44,7 +51,10 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
     socket |> assign(:age_group_filter, age_group_filter)
   end
 
-  ##########################
+  # set gender_filter to value in socket if exists
+  def assign_gender_filter(%{assigns: %{gender_filter: gender_filter}} = socket) do
+    assign(socket, :gender_filter, gender_filter)
+  end
 
   def assign_gender_filter(socket) do
     socket |> assign(:gender_filter, "all")
@@ -54,7 +64,7 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
     socket |> assign(:gender_filter, gender_filter)
   end
 
-  ##########################
+  ########### HANDLE EVENT ###############
 
   def handle_event("age_group_filter", %{"age_group_filter" => age_group_filter}, socket) do
     {:noreply,
@@ -76,7 +86,7 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
      |> assign_chart_svg()}
   end
 
-  ##########################
+  ############ CHART ##############
 
   # initialise the dataset
   def assign_dataset(

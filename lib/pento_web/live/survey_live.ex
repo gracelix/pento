@@ -2,12 +2,11 @@ defmodule PentoWeb.SurveyLive do
   use PentoWeb, :live_view
   # allows us to call the function component from the survey_live HEEx template
   # alias __MODULE__.Component
-  alias PentoWeb.DemographicLive
-  alias Pento.Survey
-  alias PentoWeb.DemographicLive.Form
-  alias PentoWeb.RatingLive
-  alias Pento.Catalog
+  alias PentoWeb.{DemographicLive, DemographicLive.Form, RatingLive, Endpoint}
+  alias Pento.{Survey, Catalog}
   alias Phoenix.LiveView.JS
+
+  @survey_results_topic "survey_results"
 
   def mount(_params, _session, socket) do
     {:ok, socket |> assign_demographics() |> assign_products() |> assign_toggle_text()}
@@ -33,6 +32,8 @@ defmodule PentoWeb.SurveyLive do
         updated_product,
         product_index
       ) do
+    Endpoint.broadcast(@survey_results_topic, "rating_created", %{})
+
     socket
     |> put_flash(:info, "Rating submitted succesfully")
     |> assign(:products, List.replace_at(products, product_index, updated_product))
