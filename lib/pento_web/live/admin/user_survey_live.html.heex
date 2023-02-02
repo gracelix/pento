@@ -1,0 +1,16 @@
+<div class="user-activity-component">
+  <h2>Survey Takers</h2>
+  <p>Users currently taking survey: <%= @user_survey_count %></p>
+
+  <div>
+  <%= for users <- @user_survey_list do %>
+    <ul>
+      <%= for user <- users do %>
+        <li>
+          <%= user.user_email %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+</div>

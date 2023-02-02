@@ -4,6 +4,7 @@ defmodule PentoWeb.Presence do
   alias PentoWeb.Presence
   @user_activity_topic "user_activity"
   @user_survey_topic "user_survey_count"
+  @user_survey_topic "user_survey_list"
 
   def track_user(pid, product, user_email) do
     Presence.track(
@@ -24,14 +25,19 @@ defmodule PentoWeb.Presence do
 
   ###########################
 
-  def track_survey_takers(pid, user_id) do
-    Presence.track(pid, @user_survey_topic, "survey-form", %{users: [%{user_id: user_id}]})
+  def track_survey_takers(pid, user_email) do
+    Presence.track(pid, @user_survey_topic, "survey-form", %{users: [%{user_email: user_email}]})
+  end
+
+  def count_survey_takers do
+    Presence.list(@user_survey_topic)
+    |> Enum.map(&extract_survey_takers/1)
+    |> count_survey_takers()
   end
 
   def list_survey_takers do
     Presence.list(@user_survey_topic)
     |> Enum.map(&extract_survey_takers/1)
-    |> count_survey_takers()
   end
 
   defp extract_survey_takers({_key, %{metas: metas}}) do

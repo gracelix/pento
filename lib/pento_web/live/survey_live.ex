@@ -72,7 +72,7 @@ defmodule PentoWeb.SurveyLive do
 
   def maybe_track_survey_takers(%{assigns: %{current_user: current_user}} = socket) do
     if connected?(socket) do
-      Presence.track_survey_takers(self(), current_user.id)
+      Presence.track_survey_takers(self(), current_user.email)
     end
   end
 
