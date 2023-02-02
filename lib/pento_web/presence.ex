@@ -3,7 +3,7 @@ defmodule PentoWeb.Presence do
 
   alias PentoWeb.Presence
   @user_activity_topic "user_activity"
-  @user_survey_topic "user_survey"
+  @user_survey_topic "user_survey_count"
 
   def track_user(pid, product, user_email) do
     Presence.track(
