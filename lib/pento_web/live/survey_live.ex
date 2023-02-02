@@ -5,11 +5,17 @@ defmodule PentoWeb.SurveyLive do
   alias PentoWeb.{DemographicLive, DemographicLive.Form, RatingLive, Endpoint}
   alias Pento.{Survey, Catalog}
   alias Phoenix.LiveView.JS
+  alias PentoWeb.Presence
 
   @survey_results_topic "survey_results"
 
   def mount(_params, _session, socket) do
     {:ok, socket |> assign_demographics() |> assign_products() |> assign_toggle_text()}
+  end
+
+  def handle_params(_params, _, socket) do
+    maybe_track_survey_takers(socket)
+    {:noreply, socket}
   end
 
   def handle_info({:created_demographic, demographic}, socket) do
@@ -19,6 +25,8 @@ defmodule PentoWeb.SurveyLive do
   def handle_info({:created_rating, product, product_index}, socket) do
     {:noreply, handle_rating_created(socket, product, product_index)}
   end
+
+  ###########################
 
   # reducers
   def handle_demographic_created(socket, demographic) do
@@ -59,4 +67,14 @@ defmodule PentoWeb.SurveyLive do
   defp list_products(user) do
     Catalog.list_products_with_user_rating(user)
   end
+
+  ###########################
+
+  def maybe_track_survey_takers(%{assigns: %{current_user: current_user}} = socket) do
+    if connected?(socket) do
+      Presence.track_survey_takers(self(), current_user.id)
+    end
+  end
+
+  def maybe_track_survey_takers(_socket), do: nil
 end

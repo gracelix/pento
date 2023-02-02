@@ -3,7 +3,6 @@ defmodule PentoWeb.ProductLive.Show do
 
   alias Pento.Catalog
   alias PentoWeb.Presence
-  alias Pento.Accounts
 
   @impl true
   def mount(_params, _session, socket) do
@@ -11,6 +10,7 @@ defmodule PentoWeb.ProductLive.Show do
   end
 
   # look up the product then conditionally track the user's presence
+  @impl true
   def handle_params(%{"id" => id}, _, socket) do
     product = Catalog.get_product!(id)
     maybe_track_user(product, socket)
