@@ -2,7 +2,7 @@
   <h1>Survey Results</h1>
 
   <div class="filters">
-    <.form for={:age_group_filter} phx-change="age_group_filter" phx_target={@myself} id={@id}>
+    <.form for={:age_group_filter} phx-change="age_group_filter" phx_target={@myself} id="age-group-form">
       <label>Filter by age group:</label>
       <select name="age_group_filter" id="age_group_filter">
         <%= for age_group <- ["all", "18 and under", "18 to 25", "25 to 35", "35 and up"] do %>
