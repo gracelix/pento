@@ -120,9 +120,9 @@
   100% { opacity: 0; }
 }
 
-#survey-form {
+/* #survey-form {
   display: none;
-}
+} */
 
 .filters {
   display: flex;

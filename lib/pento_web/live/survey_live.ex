@@ -4,7 +4,6 @@ defmodule PentoWeb.SurveyLive do
   # alias __MODULE__.Component
   alias PentoWeb.{DemographicLive, DemographicLive.Form, RatingLive, Endpoint}
   alias Pento.{Survey, Catalog}
-  alias Phoenix.LiveView.JS
   alias PentoWeb.Presence
 
   @survey_results_topic "survey_results"
